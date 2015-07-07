@@ -1,2 +1,27 @@
 ---
 # tasks file for ansible-playbook-influxdb
+#
+
+- name: fetch influxdb installation package
+  get_url: url=http://s3.amazonaws.com/influxdb/influxdb_{{ influxdb_version }}_amd64.deb dest=/tmp/influxdb_{{ influxdb_version }}_amd64.deb mode=0440
+
+- name: install influxdb package
+  command: dpkg --skip-same-version -i /tmp/influxdb_{{ influxdb_version }}_amd64.deb
+  register: dpkg_result
+  changed_when: "dpkg_result.stdout.startswith('Selecting')"
+
+- name: start influxdb service and ensure that it is enabled
+  service: name=influxdb enabled=yes state=started
+
+- name: waiting for influxdb service to become available
+  wait_for: port=8086 timeout=60
+
+- name: create influxdb database
+  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=CREATE DATABASE {{ influxdb_database }}\""
+
+- name: create user for influxdb database
+  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=CREATE USER {{ influxdb_user }} WITH PASSWORD '{{ influxdb_password }}'\""
+
+- name: grant privileges to user for influxdb database
+  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=GRANT ALL ON {{ influxdb_database }} TO {{ influxdb_user }}\""
+
