@@ -1,0 +1,9 @@
+---
+# defaults file for ansible-playbook-influxdb
+#
+influxdb_version: latest
+influxdb_admin_user: root
+influxdb_admin_password: root
+influxdb_database: testdb
+influxdb_user: someuser
+influxdb_password: somepassword
