@@ -31,3 +31,9 @@
 - name: grant privileges to user for influxdb database
   shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=GRANT ALL ON {{ influxdb_database }} TO {{ influxdb_user }}\""
 
+- name: set retention policy for influxdb_database
+  shell: >
+    curl -G http://localhost:8086/query
+    --data-urlencode "u={{ influxdb_admin_user }}"
+    --data-urlencode "p={{ influxdb_admin_password }}"
+    --data-urlencode "q=ALTER RETENTION POLICY default ON {{ influxdb_database }} DURATION {{ influxdb_retention_period }}"
