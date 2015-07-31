@@ -7,3 +7,4 @@ influxdb_admin_password: root
 influxdb_database: testdb
 influxdb_user: someuser
 influxdb_password: somepassword
+influxdb_retention_period: INF

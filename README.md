@@ -15,6 +15,7 @@ The following ansible variables are used by this role - the default values are s
 * influxdb_user: someuser # A non-privliged database user account for `influxdb_database`.
 * influxdb_password: somepassword # the password for `influxdb_user` account.
 * influxdb_http_auth_enabled: false # to disable or `true` to enable http authentication.
+* influxdb_retention_period: INF # for infinite retention, durations such as 1h, 90m, 12h, 7d, and 4w, are all supported
 ```
 
 You will want to override these role variables within your playbooks.

@@ -20,14 +20,36 @@
   wait_for: port=8086 timeout=60
 
 - name: create admin user for all influxdb databases
-  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=CREATE USER {{ influxdb_admin_user }} WITH PASSWORD '{{ influxdb_admin_password }}' WITH ALL PRIVILEGES\""
+  shell: >
+     curl -G http://localhost:8086/query
+     --data-urlencode "u={{ influxdb_admin_user }}"
+     --data-urlencode "p={{ influxdb_admin_password }}"
+     --data-urlencode "q=CREATE USER {{ influxdb_admin_user }} WITH PASSWORD '{{ influxdb_admin_password }}' WITH ALL PRIVILEGES"
 
 - name: create influxdb database
-  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=CREATE DATABASE {{ influxdb_database }}\""
+  shell: >
+     curl -G http://localhost:8086/query
+     --data-urlencode "u={{ influxdb_admin_user }}"
+     --data-urlencode "p={{ influxdb_admin_password }}"
+     --data-urlencode "q=CREATE DATABASE {{ influxdb_database }}"
 
 - name: create user for influxdb database
-  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=CREATE USER {{ influxdb_user }} WITH PASSWORD '{{ influxdb_password }}'\""
+  shell: >
+     curl -G http://localhost:8086/query
+     --data-urlencode "u={{ influxdb_admin_user }}"
+     --data-urlencode "p={{ influxdb_admin_password }}"
+     --data-urlencode "q=CREATE USER {{ influxdb_user }} WITH PASSWORD '{{ influxdb_password }}'"
 
 - name: grant privileges to user for influxdb database
-  shell: "curl -G http://localhost:8086/query --data-urlencode \"u={{ influxdb_admin_user }}\" --data-urlencode \"p={{ influxdb_admin_password }}\" --data-urlencode \"q=GRANT ALL ON {{ influxdb_database }} TO {{ influxdb_user }}\""
+  shell: >
+     curl -G http://localhost:8086/query
+     --data-urlencode "u={{ influxdb_admin_user }}"
+     --data-urlencode "p={{ influxdb_admin_password }}"
+     --data-urlencode "q=GRANT ALL ON {{ influxdb_database }} TO {{ influxdb_user }}"
 
+- name: set retention policy for influxdb_database
+  shell: >
+    curl -G http://localhost:8086/query
+    --data-urlencode "u={{ influxdb_admin_user }}"
+    --data-urlencode "p={{ influxdb_admin_password }}"
+    --data-urlencode "q=ALTER RETENTION POLICY default ON {{ influxdb_database }} DURATION {{ influxdb_retention_period }}"
