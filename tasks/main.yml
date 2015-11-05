@@ -6,7 +6,7 @@
   get_url: url=http://s3.amazonaws.com/influxdb/influxdb_{{ influxdb_version }}_amd64.deb dest=/tmp/influxdb_{{ influxdb_version }}_amd64.deb mode=0440
 
 - name: install influxdb package
-  command: dpkg --skip-same-version -i /tmp/influxdb_{{ influxdb_version }}_amd64.deb
+  command: dpkg --skip-same-version -i --force-all /tmp/influxdb_{{ influxdb_version }}_amd64.deb
   register: dpkg_result
   changed_when: "dpkg_result.stdout.startswith('Selecting')"
 
