@@ -9,6 +9,8 @@
   command: dpkg --skip-same-version -i --force-all /tmp/influxdb_{{ influxdb_version }}_amd64.deb
   register: dpkg_result
   changed_when: "dpkg_result.stdout.startswith('Selecting')"
+  notify:
+  - restart influxdb
 
 - name: configure influxdb service
   template: src=influxdb.conf.j2 dest=/etc/opt/influxdb/influxdb.conf owner=root group=root mode=0644
