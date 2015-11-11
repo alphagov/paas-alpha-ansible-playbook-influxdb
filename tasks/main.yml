@@ -8,7 +8,7 @@
 - name: install influxdb package
   command: dpkg --skip-same-version -i --force-all /tmp/influxdb_{{ influxdb_version }}_amd64.deb
   register: dpkg_result
-  changed_when: "dpkg_result.stdout.startswith('Selecting')"
+  changed_when: not dpkg_result.stderr.endswith('skipping')
   notify:
   - restart influxdb
 
