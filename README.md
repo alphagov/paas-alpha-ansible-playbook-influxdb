@@ -2,6 +2,8 @@
 
 Ansible role for deploying the [Influxfb](https://github.com/influxdb/influxdb) time series database
 
+Tested with influxdb version 0.9.4.2
+
 ### Requirements
 
 The following ansible variables are used by this role - the default values are shown alongside.
